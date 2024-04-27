@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   
+    <!--Name -->
+    <title>Tic Tac Toe</title>
+<!--Connection to CSS-->
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+
+
+  <body>
+    <!--Game Board-->
+    <table>
+      <tr>
+        <td class="cell" id="0"></td>
+        <td class="cell" id="1"></td>
+        <td class="cell" id="2"></td>
+      </tr>
+      <tr>
+        <td class="cell" id="3"></td>
+        <td class="cell" id="4"></td>
+        <td class="cell" id="5"></td>
+      </tr>
+      <tr>
+        <td class="cell" id="6"></td>
+        <td class="cell" id="7"></td>
+        <td class="cell" id="8"></td>
+      </tr>
+    </table>
+    <!--Display Endgame -->
+    <div class="endgame">
+      <div class="text"></div>
+    </div>
+    <!--Lets the Player Select the symbol they want. Can Change-->>
+    <div class = "selectSym">
+      <p>Select symbol:</p>
+        <button onClick="selectSym('X')">X</button>
+        <button onClick="selectSym('O')">O</button>
+      </div>
+    <!--Start Game Button -->
+    <button onClick="startGame()">Replay</button>
+<!--Connection to JavaScript-->
+<script src="script.js"></script>
+  
+</body>
+</html>
