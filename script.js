@@ -1,8 +1,6 @@
 //Initalize the Board
 var origBoard;
-//Variables
-const huPlayer = 'O';
-const aiPlayer = 'X';
+
 //Array of Winning Combos from Left to Right
 const winCombos = [
 	[0, 1, 2],
