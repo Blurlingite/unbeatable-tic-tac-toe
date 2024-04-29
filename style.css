@@ -50,7 +50,7 @@ table tr td:last-child {
   color: white;
   font-size: 2em;
 }
-
+/*Message Overall Display, Pop up windown for middle of board*/
 .selectSym{
     display: none;
     width: 220px;
@@ -66,13 +66,13 @@ table tr td:last-child {
     color: yellow;
     font-size: 2em; 
   }
-  
+  /*Button for the system dialog for replay functionality*/
   .selectSym button{
     font-family: "Comic Sans MS", cursive, sans-serif;
     font-size:  50px;
     width: 70px;
   }
-  
+  /*Positioning*/
   .selectSym  button:first-of-type {
     margin-right: 10px;
   }
