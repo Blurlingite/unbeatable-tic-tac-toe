@@ -17,7 +17,7 @@ const cells = document.querySelectorAll('.cell');
 //Function to start the game, runs at the start and when replay is clicked
 startGame();
 
-
+//Function for selecting variable
 function selectSym(sym){
     huPlayer = sym;
     aiPlayer = sym==='O' ? 'X' :'O';
@@ -35,7 +35,7 @@ function selectSym(sym){
 
 function startGame() {
 //Whenever button is clicked or initalized it is setting values
-	document.querySelector(".endgame").style.display = "none";
+    document.querySelector(".endgame").style.display = "none";
     document.querySelector('.endgame .text').innerText ="";
     document.querySelector('.selectSym').style.display = "block";
     origBoard = Array.from(Array(9).keys());
@@ -79,7 +79,7 @@ function turn(squareId, player) {
     }
     return gameWon;
   }
-  //
+  //Runs Commands from GameOver after calling GameWon, Ending Displays and Functions of the program, Essentially what happens when game is over
   function gameOver(gameWon){
     //Highlights boxes where entity won, background color depends on who won
     for (let index of winCombos[gameWon.index]) {
@@ -130,7 +130,7 @@ function turn(squareId, player) {
     } else if (availSpots.length === 0) {
       return {score: 0};
     }
-    //
+    //Based on the values from above, it determines the place to which the ai should go to always be in the optimal location, Complicated worth testing program and trying to get the root behind this logic
     var moves = [];
     for (let i = 0; i < availSpots.length; i ++) {
       var move = {};
