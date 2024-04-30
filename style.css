@@ -50,32 +50,17 @@ table tr td:last-child {
   color: white;
   font-size: 2em;
 }
-/*Message Overall Display, Pop up windown for middle of board*/
-.selectSym{
-    display: none;
-    width: 220px;
-    top: 110px;
-    background-color: rgba(205, 133, 63, 0.8);
-    position: absolute;
-    left: 50%;
-    margin-left: -110px;
-    padding-top: 10px;
-    padding-bottom: 50px;
+  .cell {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #000;
     text-align: center;
-    border-radius: 5px;
-    color: yellow;
-    font-size: 2em; 
+    vertical-align: middle;
+    font-size: 24px;
+    cursor: pointer;
   }
-  /*Button for the system dialog for replay functionality*/
-  .selectSym button{
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    font-size:  50px;
-    width: 70px;
-  }
-  /*Positioning*/
-  .selectSym  button:first-of-type {
-    margin-right: 10px;
-  }
-  .selectSym  button:last-of-type {
-    margin-left: 10px;
+  
+  button {
+    margin: 10px;
+    padding: 10px;
   }

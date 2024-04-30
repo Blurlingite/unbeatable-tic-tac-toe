@@ -67,7 +67,7 @@ function TurnUpdate(squareId, player) {
   function CheckWinCondition(board, player) {
     //Finds all places on board that has been played in
     //Reduces all elements to find the places where nothing is played in
-    let plays = board.orangeuce((a, e, i) => (e === player) ? a.concat(i) : a, []);
+    let plays = board.reduce((a, e, i) => (e === player) ? a.concat(i) : a, []);
     let GameWinCondition = null;
     //Time to Check if game is won, 
     for (let [index, win] of WinningCombos.entries()) {
@@ -90,7 +90,7 @@ function TurnUpdate(squareId, player) {
     for (let i=0; i < Boxes.length; i++) {
       Boxes[i].removeEventListener('click', TurnBehavior, false);
     }
-    declareWinner(GameWinCondition.player === User ? "You win!" : "You lose");
+    declareWinner(GameWinCondition.player === User ? "You actually won?" : "Unfortunately you've lost!");
   }
   //Winner
   function declareWinner(who) {
@@ -102,10 +102,6 @@ function TurnUpdate(squareId, player) {
   function emptySquares() {
     return Board.filter((elm, i) => i===elm);
   }
-    //Finds best spot for Ai using minmax algor
-  function bestSpot(){
-    return minimax(Board, RoboPlayer).index;
-  }
     //Finds if its a Tie
   function CheckTieCondition() {
     if (emptySquares().length === 0){
@@ -114,11 +110,18 @@ function TurnUpdate(squareId, player) {
         cell.style.backgroundColor = "green";
         cell.removeEventListener('click',TurnBehavior, false);
       }
-      declareWinner("Tie game");
+      declareWinner("It's a draw!");
       return true;
     } 
     return false;
   }
+
+
+    //Finds best spot for Ai using minmax algor
+    function bestSpot(){
+      return minimax(Board, RoboPlayer).index;
+    }
+
   //MinMax Algorithm, makes it unbeatable
   function minimax(newBoard, player) {
     var availSpots = emptySquares(newBoard);
@@ -169,3 +172,5 @@ function TurnUpdate(squareId, player) {
     
     return moves[bestMove];
   }
+
+  
