@@ -19,14 +19,14 @@ startGame();
 
 //Function for selecting variable
 function SelectionPrompt(SystemSelect){
-    huPlayer = SystemSelect;
-    aiPlayer = SystemSelect==='O' ? 'X' :'O';
+    User = SystemSelect;
+    RoboPlayer = SystemSelect==='O' ? 'X' :'O';
     Board = Array.from(Array(9).keys());
     for (let i = 0; i < Boxes.length; i++) {
       Boxes[i].addEventListener('click', TurnBehavior, false);
     }
-    if (aiPlayer === 'X') {
-      TurnUpdate(bestSpot(),aiPlayer);
+    if (RoboPlayer === 'X') {
+      TurnUpdate(bestSpot(),RoboPlayer);
     }
     document.querySelector('.SelectionPrompt').style.display = "none";
   }
@@ -48,10 +48,10 @@ function startGame() {
 //Logs the Place an entity clicks
 function TurnBehavior(square) {
 	if (typeof Board[square.target.id] ==='number') {
-        TurnUpdate(square.target.id, huPlayer);
+        TurnUpdate(square.target.id, User);
         //After user takes a TurnUpdate, AI takes TurnUpdate for best spot
-        if (!CheckWinCondition(Board, huPlayer) && !CheckTieCondition())  
-          TurnUpdate(bestSpot(), aiPlayer);
+        if (!CheckWinCondition(Board, User) && !CheckTieCondition())  
+          TurnUpdate(bestSpot(), RoboPlayer);
       }
 }
 //Updates the place clicked on the board with the variable we set for Player
@@ -67,7 +67,7 @@ function TurnUpdate(squareId, player) {
   function CheckWinCondition(board, player) {
     //Finds all places on board that has been played in
     //Reduces all elements to find the places where nothing is played in
-    let plays = board.reduce((a, e, i) => (e === player) ? a.concat(i) : a, []);
+    let plays = board.orangeuce((a, e, i) => (e === player) ? a.concat(i) : a, []);
     let GameWinCondition = null;
     //Time to Check if game is won, 
     for (let [index, win] of WinningCombos.entries()) {
@@ -84,13 +84,13 @@ function TurnUpdate(squareId, player) {
     //Highlights boxes where entity won, background color depends on who won
     for (let index of WinningCombos[GameWinCondition.index]) {
       document.getElementById(index).style.backgroundColor = 
-        GameWinCondition.player === huPlayer ? "blue" : "red";
+        GameWinCondition.player === User ? "green" : "orange";
     }
     //Makes it so that you cant Click anymore on the board and just displays win or lose
     for (let i=0; i < Boxes.length; i++) {
       Boxes[i].removeEventListener('click', TurnBehavior, false);
     }
-    declareWinner(GameWinCondition.player === huPlayer ? "You win!" : "You lose");
+    declareWinner(GameWinCondition.player === User ? "You win!" : "You lose");
   }
   //Winner
   function declareWinner(who) {
@@ -104,7 +104,7 @@ function TurnUpdate(squareId, player) {
   }
     //Finds best spot for Ai using minmax algor
   function bestSpot(){
-    return minimax(Board, aiPlayer).index;
+    return minimax(Board, RoboPlayer).index;
   }
     //Finds if its a Tie
   function CheckTieCondition() {
@@ -123,9 +123,9 @@ function TurnUpdate(squareId, player) {
   function minimax(newBoard, player) {
     var availSpots = emptySquares(newBoard);
     // Sets values for win cases either player or AI
-    if (CheckWinCondition(newBoard, huPlayer)) {
+    if (CheckWinCondition(newBoard, User)) {
       return {score: -10};
-    } else if (CheckWinCondition(newBoard, aiPlayer)) {
+    } else if (CheckWinCondition(newBoard, RoboPlayer)) {
       return {score: 10};
     } else if (availSpots.length === 0) {
       return {score: 0};
@@ -137,19 +137,19 @@ function TurnUpdate(squareId, player) {
       move.index = newBoard[availSpots[i]];
       newBoard[availSpots[i]] = player;
       
-      if (player === aiPlayer)
-        move.score = minimax(newBoard, huPlayer).score;
+      if (player === RoboPlayer)
+        move.score = minimax(newBoard, User).score;
       else
-         move.score =  minimax(newBoard, aiPlayer).score;
+         move.score =  minimax(newBoard, RoboPlayer).score;
       newBoard[availSpots[i]] = move.index;
-      if ((player === aiPlayer && move.score === 10) || (player === huPlayer && move.score === -10))
+      if ((player === RoboPlayer && move.score === 10) || (player === User && move.score === -10))
         return move;
       else 
         moves.push(move);
     }
     
     let bestMove, bestScore;
-    if (player === aiPlayer) {
+    if (player === RoboPlayer) {
       bestScore = -1000;
       for(let i = 0; i < moves.length; i++) {
         if (moves[i].score > bestScore) {
