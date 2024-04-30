@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
 //Initalize the Board
 var Board;
 
+
+var numOfSearches = 0;
+var outcome = "";
+
 //Array of Winning Combos from Left to Right
 const WinningCombos = [
 	[0, 1, 2],
@@ -53,6 +57,10 @@ const WinningCombos = [
 const Boxes = document.querySelectorAll('.cell');
 //Function to start the game, runs at the start and when replay is clicked
 startGame();
+
+
+
+
 
 //Function for selecting variable
 function SelectionPrompt(SystemSelect){
@@ -70,30 +78,29 @@ function SelectionPrompt(SystemSelect){
 
 
 
-function startGame() {
 
+
+function storeGameDataInDatabase(){
   const currentDate = new Date(); // Get the current date when starting a new game
-  const formattedDate = currentDate.toLocaleDateString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric'
-  });
+  const formattedDate = currentDate.toLocaleString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+});
 
 
-  const numOfMoves = 4;
-  const timePlayed = "22";
-  const outcome = "win";
-
-  console.log('Formatted Date:', formattedDate);
 
 
      // Make an HTTP POST request to your server to store the game data
-     fetch('/api/storeGameData', {
+    const responseFromServer =  fetch('/api/storeGameData', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ date: formattedDate, numOfMoves, timePlayed, outcome })
+      body: JSON.stringify({ date: formattedDate, numOfSearches, outcome })
   })
   .then(response => {
       if (!response.ok) {
@@ -104,6 +111,14 @@ function startGame() {
   .catch(error => {
       console.error('Error storing game data in MongoDB:', error);
   });
+
+}
+
+
+
+
+
+function startGame() {
 
 //Whenever button is clicked or initalized it is setting values
     document.querySelector(".endgame").style.display = "none";
@@ -116,6 +131,10 @@ function startGame() {
         Boxes[i].style.removeProperty('background-color');
 	}
 }
+
+
+
+
 //Logs the Place an entity clicks
 function TurnBehavior(square) {
 	if (typeof Board[square.target.id] ==='number') {
@@ -125,6 +144,10 @@ function TurnBehavior(square) {
           TurnUpdate(bestSpot(), RoboPlayer);
       }
 }
+
+
+
+
 //Updates the place clicked on the board with the variable we set for Player
 function TurnUpdate(squareId, player) {
     Board[squareId] = player;
@@ -134,6 +157,9 @@ function TurnUpdate(squareId, player) {
     if (GameWinCondition) GameOverCondition(GameWinCondition);
     CheckTieCondition();
   }
+
+
+
   //See if we win
   function CheckWinCondition(board, player) {
     //Finds all places on board that has been played in
@@ -163,16 +189,29 @@ function TurnUpdate(squareId, player) {
     }
     declareWinner(GameWinCondition.player === User ? "You actually won?" : "Unfortunately you've lost!");
   }
+
+
+
+
   //Winner
   function declareWinner(who) {
     //Displays Endgame
     document.querySelector(".endgame").style.display = "block";
     document.querySelector(".endgame .text").innerText = who;
+    outcome = "Win";
+    storeGameDataInDatabase();
   }
+
+
+
   //Finds all empty Squares by filtering out every box with an element
   function emptySquares() {
     return Board.filter((elm, i) => i===elm);
   }
+
+
+
+
     //Finds if its a Tie
   function CheckTieCondition() {
     if (emptySquares().length === 0){
@@ -188,10 +227,16 @@ function TurnUpdate(squareId, player) {
   }
 
 
+
+
+
     //Finds best spot for Ai using minmax algor
     function bestSpot(){
       return minimax(Board, RoboPlayer).index;
     }
+
+
+
 
   //MinMax Algorithm, makes it unbeatable
   function minimax(newBoard, player) {
@@ -241,6 +286,8 @@ function TurnUpdate(squareId, player) {
       }
     }
     
+    numOfSearches = numOfSearches + 1;
+
     return moves[bestMove];
   }
 

@@ -57,7 +57,7 @@ app.get('/api/gameData', async (req, res) => {
 // Define a route to store game data in MongoDB
 app.post('/api/storeGameData', async (req, res) => {
   try {
-      const { date, numOfMoves, timePlayed, outcome } = req.body; // Extract data from the request body
+      const { date, numOfSearches, outcome } = req.body; // Extract data from the request body
 
       // Access the MongoDB collection from the connected client
       const database = client.db("tictactoeAIWins");
@@ -68,14 +68,14 @@ app.post('/api/storeGameData', async (req, res) => {
 
       // If an entry with the same date exists, you can choose to update it
       if (existingGameData) {
-          // Here, you would write code to update the existing entry
-          console.log('Entry already exists for date:', date);
+          //  write code to update the existing entry
+
           // Send a success response
           return res.status(200).json({ message: 'Entry already exists for date. No new entry added.' });
       }
 
       // Otherwise, if no entry exists for the date, insert the new entry into the database
-      await collection.insertOne({ date, numOfMoves, timePlayed, outcome });
+      await collection.insertOne({ date, numOfSearches, outcome });
       console.log('New entry added for date:', date);
       // Send a success response
       res.status(200).json({ message: 'New entry added successfully for date.' });
