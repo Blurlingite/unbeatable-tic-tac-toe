@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   
+    <!--Name -->
+    <title>Tic Tac Toe</title>
+<!--Connection to CSS-->
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+
+  <div id="gameDataContainer"></div>
+
+  <body>
+    <!--Game Board-->
+    <section class="game-board">
+    <table>
+      <tr>
+        <!--Row 1-->
+        <td class="cell" id="0"></td>
+        <td class="cell" id="1"></td>
+        <td class="cell" id="2"></td>
+      </tr>
+      <tr>
+        <!--Row 2-->
+        <td class="cell" id="3"></td>
+        <td class="cell" id="4"></td>
+        <td class="cell" id="5"></td>
+      </tr>
+      <tr>
+        <!--Row 3-->
+        <td class="cell" id="6"></td>
+        <td class="cell" id="7"></td>
+        <td class="cell" id="8"></td>
+      </tr>
+    </table>
+  </section>
+    <!--Endgame Text-->
+    <div class="endgame">
+      <div class="text"></div>
+    </div>
+    <!--Lets the Player Select the symbol they want. Can Change-->>
+    <section class="game-controls">
+      <div class = "SelectionPrompt">
+        <p>Please select "X" or "O":</p>
+          <button onClick="SelectionPrompt('X')">X</button>
+          <button onClick="SelectionPrompt('O')">O</button>
+        </div>
+      <!--Start Game Button -->
+      <button onClick="startGame()">Play Again?</button>
+    </section>
+
+<!--Connection to JavaScript-->
+<script src="script.js"></script>
+  
+</body>
+</html>
