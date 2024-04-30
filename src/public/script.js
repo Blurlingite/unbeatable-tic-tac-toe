@@ -1,27 +1,27 @@
 // Fetch game data from the server and update HTML content
-function fetchGameDataAndUpdateHTML() {
-  fetch('/api/gameData')
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.json();
-      })
-      .then(data => {
-          // Update HTML content with the fetched data
-          const gameDataContainer = document.getElementById('gameDataContainer');
-          gameDataContainer.innerHTML = `<p>Game ID: ${data.date_time_id}</p>`; // Example: Displaying game ID
-      })
-      .catch(error => {
-          console.error('There was a problem with the fetch operation:', error);
-      });
-}
+// function fetchGameDataAndUpdateHTML() {
+//   fetch('/api/gameData')
+//       .then(response => {
+//           if (!response.ok) {
+//               throw new Error('Network response was not ok');
+//           }
+//           return response.json();
+//       })
+//       .then(data => {
+//           // Update HTML content with the fetched data
+//           const gameDataContainer = document.getElementById('gameDataContainer');
+//           gameDataContainer.innerHTML = `<p>Game ID: ${data.date_time_id}</p>`; // Example: Displaying game ID
+//       })
+//       .catch(error => {
+//           console.error('There was a problem with the fetch operation:', error);
+//       });
+// }
 
 
 // Call the fetch function when the DOM content is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  fetchGameDataAndUpdateHTML();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//   fetchGameDataAndUpdateHTML();
+// });
 
 
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 //Initalize the Board
-var Board;
+var ticTacToeBoard;
 
 
 var numOfSearches = 0;
@@ -66,12 +66,12 @@ startGame();
 function SelectionPrompt(SystemSelect){
     User = SystemSelect;
     RoboPlayer = SystemSelect==='O' ? 'X' :'O';
-    Board = Array.from(Array(9).keys());
+    ticTacToeBoard = Array.from(Array(9).keys());
     for (let i = 0; i < Boxes.length; i++) {
       Boxes[i].addEventListener('click', TurnBehavior, false);
     }
     if (RoboPlayer === 'X') {
-      TurnUpdate(bestSpot(),RoboPlayer);
+      TurnUpdate(bestSquare(),RoboPlayer);
     }
     document.querySelector('.SelectionPrompt').style.display = "none";
   }
@@ -91,10 +91,7 @@ function storeGameDataInDatabase(){
     second: '2-digit'
 });
 
-
-
-
-     // Make an HTTP POST request to your server to store the game data
+     // Make an HTTP POST request to the server to store the game data
     const responseFromServer =  fetch('/api/storeGameData', {
       method: 'POST',
       headers: {
@@ -124,7 +121,7 @@ function startGame() {
     document.querySelector(".endgame").style.display = "none";
     document.querySelector('.endgame .text').innerText ="";
     document.querySelector('.SelectionPrompt').style.display = "block";
-    Board = Array.from(Array(9).keys());
+    ticTacToeBoard = Array.from(Array(9).keys());
     //Clears the board
     for (let i = 0; i < Boxes.length; i++) {
         Boxes[i].innerText = '';
@@ -135,13 +132,13 @@ function startGame() {
 
 
 
-//Logs the Place an entity clicks
+//Logs the Place the player and AI opponent clicks
 function TurnBehavior(square) {
-	if (typeof Board[square.target.id] ==='number') {
+	if (typeof ticTacToeBoard[square.target.id] ==='number') {
         TurnUpdate(square.target.id, User);
         //After user takes a TurnUpdate, AI takes TurnUpdate for best spot
-        if (!CheckWinCondition(Board, User) && !CheckTieCondition())  
-          TurnUpdate(bestSpot(), RoboPlayer);
+        if (!CheckWinCondition(ticTacToeBoard, User) && !CheckTieCondition())  
+          TurnUpdate(bestSquare(), RoboPlayer);
       }
 }
 
@@ -150,10 +147,12 @@ function TurnBehavior(square) {
 
 //Updates the place clicked on the board with the variable we set for Player
 function TurnUpdate(squareId, player) {
-    Board[squareId] = player;
+  ticTacToeBoard[squareId] = player;
     document.getElementById(squareId).innerHTML = player;
-    let GameWinCondition = CheckWinCondition(Board, player);
-    //Runs gamewon function Then Gameover, Finds who won then runs commands at end of game
+
+        //Runs CheckWinCondition function Then GameOverCondition, Finds who won then runs commands at end of game
+
+    let GameWinCondition = CheckWinCondition(ticTacToeBoard, player);
     if (GameWinCondition) GameOverCondition(GameWinCondition);
     CheckTieCondition();
   }
@@ -161,10 +160,10 @@ function TurnUpdate(squareId, player) {
 
 
   //See if we win
-  function CheckWinCondition(board, player) {
+  function CheckWinCondition(ticTacToeBoard, player) {
     //Finds all places on board that has been played in
     //Reduces all elements to find the places where nothing is played in
-    let plays = board.reduce((a, e, i) => (e === player) ? a.concat(i) : a, []);
+    let plays = ticTacToeBoard.reduce((a, e, i) => (e === player) ? a.concat(i) : a, []);
     let GameWinCondition = null;
     //Time to Check if game is won, 
     for (let [index, win] of WinningCombos.entries()) {
@@ -187,18 +186,18 @@ function TurnUpdate(squareId, player) {
     for (let i=0; i < Boxes.length; i++) {
       Boxes[i].removeEventListener('click', TurnBehavior, false);
     }
-    declareWinner(GameWinCondition.player === User ? "You actually won?" : "Unfortunately you've lost!");
+    revealVictor(GameWinCondition.player === User ? "You actually won?" : "Unfortunately you've lost!");
   }
 
 
 
 
   //Winner
-  function declareWinner(who) {
+  function revealVictor(playerOrAI) {
     //Displays Endgame
     document.querySelector(".endgame").style.display = "block";
-    document.querySelector(".endgame .text").innerText = who;
-    outcome = "Win";
+    document.querySelector(".endgame .text").innerText = playerOrAI;
+    outcome = "Win"; // used to store in database
     storeGameDataInDatabase();
   }
 
@@ -206,7 +205,7 @@ function TurnUpdate(squareId, player) {
 
   //Finds all empty Squares by filtering out every box with an element
   function emptySquares() {
-    return Board.filter((elm, i) => i===elm);
+    return ticTacToeBoard.filter((elm, i) => i===elm);
   }
 
 
@@ -220,7 +219,7 @@ function TurnUpdate(squareId, player) {
         cell.style.backgroundColor = "green";
         cell.removeEventListener('click',TurnBehavior, false);
       }
-      declareWinner("It's a draw!");
+      revealVictor("It's a tie!");
       return true;
     } 
     return false;
@@ -231,36 +230,41 @@ function TurnUpdate(squareId, player) {
 
 
     //Finds best spot for Ai using minmax algor
-    function bestSpot(){
-      return minimax(Board, RoboPlayer).index;
+    function bestSquare(){
+      return minimaxAlgorithm(ticTacToeBoard, RoboPlayer).index;
     }
 
 
 
 
   //MinMax Algorithm, makes it unbeatable
-  function minimax(newBoard, player) {
-    var availSpots = emptySquares(newBoard);
+  function minimaxAlgorithm(newticTacToeBoard, player) {
+    var availableSquares = emptySquares(newticTacToeBoard);
     // Sets values for win cases either player or AI
-    if (CheckWinCondition(newBoard, User)) {
+    if (CheckWinCondition(newticTacToeBoard, User)) {
+
       return {score: -10};
-    } else if (CheckWinCondition(newBoard, RoboPlayer)) {
+
+    } else if (CheckWinCondition(newticTacToeBoard, RoboPlayer)) {
+
       return {score: 10};
-    } else if (availSpots.length === 0) {
+
+    } else if (availableSquares.length === 0) {
+
       return {score: 0};
     }
     //Based on the values from above, it determines the place to which the ai should go to always be in the optimal location, Complicated worth testing program and trying to get the root behind this logic
     var moves = [];
-    for (let i = 0; i < availSpots.length; i ++) {
+    for (let i = 0; i < availableSquares.length; i ++) {
       var move = {};
-      move.index = newBoard[availSpots[i]];
-      newBoard[availSpots[i]] = player;
+      move.index = newticTacToeBoard[availableSquares[i]];
+      newticTacToeBoard[availableSquares[i]] = player;
       
       if (player === RoboPlayer)
-        move.score = minimax(newBoard, User).score;
+        move.score = minimaxAlgorithm(newticTacToeBoard, User).score;
       else
-         move.score =  minimax(newBoard, RoboPlayer).score;
-      newBoard[availSpots[i]] = move.index;
+         move.score =  minimaxAlgorithm(newticTacToeBoard, RoboPlayer).score;
+      newticTacToeBoard[availableSquares[i]] = move.index;
       if ((player === RoboPlayer && move.score === 10) || (player === User && move.score === -10))
         return move;
       else 
@@ -286,7 +290,8 @@ function TurnUpdate(squareId, player) {
       }
     }
     
-    numOfSearches = numOfSearches + 1;
+    // used to store how many searches the AI took
+    numOfSearches = numOfSearches + 1; 
 
     return moves[bestMove];
   }
