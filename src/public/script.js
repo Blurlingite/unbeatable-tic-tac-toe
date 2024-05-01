@@ -297,3 +297,75 @@ function TurnUpdate(squareId, player) {
   }
 
  
+
+
+
+
+
+
+  // function minimaxAlphaBetaPrune(newticTacToeBoard, player, alpha, beta) {
+  //   var availableSquares = emptySquares(newticTacToeBoard);
+  
+  //   if (CheckWinCondition(newticTacToeBoard, User)) {
+  //     return { score: -10 };
+  //   } else if (CheckWinCondition(newticTacToeBoard, RoboPlayer)) {
+  //     return { score: 10 };
+  //   } else if (availableSquares.length === 0) {
+  //     return { score: 0 };
+  //   }
+  
+  //   var moves = [];
+  
+  //   for (let i = 0; i < availableSquares.length; i++) {
+  //     var move = {};
+  //     move.index = newticTacToeBoard[availableSquares[i]];
+  //     newticTacToeBoard[availableSquares[i]] = player;
+  
+  //     // If its the AI's turn, updaate alpha, otherwise update beta if itss player's turn
+  //     if (player === RoboPlayer) {
+  //       move.score = minimaxAlgorithm(newticTacToeBoard, User, alpha, beta).score;
+  //       if (move.score > alpha) {
+  //         alpha = move.score;
+  //       }
+  //     } else {
+  //       move.score = minimaxAlgorithm(newticTacToeBoard, RoboPlayer, alpha, beta).score;
+  //       if (move.score < beta) {
+  //         beta = move.score;
+  //       }
+  //     }
+  
+  //     newticTacToeBoard[availableSquares[i]] = move.index;
+  
+  //     // if alpha is greater, the current move is useless so prune it by breaking out of for loop
+  //     if (alpha >= beta) {
+  //       break; 
+  //     }
+  
+  //     moves.push(move);
+  //   }
+  
+  //   let bestMove, bestScore;
+  
+  //   if (player === RoboPlayer) {
+  //     bestScore = -1000;
+  //     for (let i = 0; i < moves.length; i++) {
+  //       if (moves[i].score > bestScore) {
+  //         bestScore = moves[i].score;
+  //         bestMove = i;
+  //       }
+  //     }
+  //   } else {
+  //     bestScore = 1000;
+  //     for (let i = 0; i < moves.length; i++) {
+  //       if (moves[i].score < bestScore) {
+  //         bestScore = moves[i].score;
+  //         bestMove = i;
+  //       }
+  //     }
+  //   }
+  
+  //   numOfSearches = numOfSearches + 1;
+  
+  //   return moves[bestMove];
+  // }
+  
